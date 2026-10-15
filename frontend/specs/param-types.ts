@@ -1,4 +1,4 @@
-import type { OperationType, Category } from '../src/lib/financial-types';
+import type { OperationType, Category, BusinessType } from '../src/lib/financial-types';
 
 /**
  * Reusable date range filter used across multiple endpoints.
@@ -17,11 +17,8 @@ export interface DateRangeFilter {
 /**
  * Query parameters for GET /api/metrics/alerts
  *
- * The `/api/metrics/alerts` endpoint accepts threshold, group_by, and
- * optional date range filters — see verification.md decision.
- *
- * TODO: `business_type` was marked ❓ in verification.md. The OpenAPI spec
- * lists it but its type was uncertain. Revisit once confirmed.
+ * The `/api/metrics/alerts` endpoint accepts threshold, group_by, date range,
+ * and business_type filters.
  *
  * @see {@link https://localhost:8000/api/metrics/alerts | GET /api/metrics/alerts}
  */
@@ -39,14 +36,15 @@ export interface AlertsParams extends DateRangeFilter {
    */
   group_by?: 'day' | 'week' | 'month';
 
-  // TODO: business_type (❓ in verification — confirm OpenAPI type)
+  /**
+   * Filter by business line.
+   * Valid values: `"B2B"`, `"B2C"`.
+   */
+  business_type?: BusinessType;
 }
 
 /**
  * Query parameters for GET /api/metrics/categories/top
- *
- * TODO: `business_type` was marked ❓ in verification.md — the OpenAPI spec
- * lists it but its type was uncertain. Revisit once confirmed.
  *
  * @see {@link https://localhost:8000/api/metrics/categories/top | GET /api/metrics/categories/top}
  */
@@ -63,7 +61,35 @@ export interface TopCategoriesParams extends DateRangeFilter {
    */
   limit?: number;
 
-  // TODO: business_type (❓ in verification — confirm OpenAPI type)
+  /**
+   * Filter by business line.
+   * Valid values: `"B2B"`, `"B2C"`.
+   */
+  business_type?: BusinessType;
+}
+
+/**
+ * Query parameters for GET /api/metrics/summary
+ *
+ * Used by the alerts table (decisions Q1-a + Q9-B): fetched with
+ * `operation_type="outcome"` and `start_date`/`end_date` when the applied
+ * date range is active. The moving average is computed from the periods
+ * within the range (Q9-B/Q10-B).
+ *
+ * @see {@link https://localhost:8000/api/metrics/summary | GET /api/metrics/summary}
+ */
+export interface SummaryParams extends DateRangeFilter {
+  /** Valid values: `"day"`, `"week"`, `"month"`. Default: `"month"`. */
+  group_by?: 'day' | 'week' | 'month';
+
+  /** Valid values: `"suppliers"`, `"sales"`, `"operational"`, `"administrative"`, `"others"`. */
+  category?: Category;
+
+  /** Valid values: `"income"`, `"outcome"`. */
+  operation_type?: OperationType;
+
+  /** Valid values: `"B2B"`, `"B2C"`. */
+  business_type?: BusinessType;
 }
 
 /**
