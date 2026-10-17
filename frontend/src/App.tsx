@@ -1,79 +1,69 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { KPIRow } from "@/components/dashboard/kpi-row";
-import { IncomeOutcomeChart } from "@/components/dashboard/income-outcome-chart";
-import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart";
-import {
-  type FinancialMovement,
-  type KPIMetrics,
-  type MonthlyDataPoint,
-} from "@/lib/financial-types";
-import { computeKPIs, computeMonthlyData } from "@/lib/financial-utils";
+import { FiltersProvider, FacetsProvider } from "@/context/filters-context";
+import { useFacets } from "@/hooks/useFacets";
+import { DashboardPage } from "@/pages/dashboard-page";
+import { ComparisonPage } from "@/pages/comparison-page";
+import type { Granularity } from "@/lib/financial-types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-
-async function fetchFinancialData(): Promise<FinancialMovement[]> {
-  const response = await fetch(`${API_BASE_URL}/api/metrics`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch financial data: ${response.status}`);
-  }
-  return response.json();
+function computePeriodLabel(startDate: string, endDate: string): string {
+  if (startDate && endDate) return `${startDate} – ${endDate}`;
+  if (startDate && !endDate) return `From ${startDate}`;
+  if (!startDate && endDate) return `Until ${endDate}`;
+  return "All time";
 }
 
 function App() {
-  const [metrics, setMetrics] = useState<KPIMetrics | null>(null);
-  const [monthlyData, setMonthlyData] = useState<MonthlyDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // ── Facets (available range) — shared via context (M-4, Q16-B) ──
+  const facetsResult = useFacets();
 
-  useEffect(() => {
-    fetchFinancialData()
-      .then((movements) => {
-        setMetrics(computeKPIs(movements));
-        setMonthlyData(computeMonthlyData(movements));
-      })
-      .catch(() => {
-        setError(
-          "No se pudo cargar la informacion financiera. Revisa la API de backend.",
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  // ── Applied filter state (what drives the data fetches) ──
+  const [appliedStartDate, setAppliedStartDate] = useState("");
+  const [appliedEndDate, setAppliedEndDate] = useState("");
+  const [appliedThreshold, setAppliedThreshold] = useState(0.3);
+  const [appliedGranularity, setAppliedGranularity] = useState<Granularity>("month");
 
-  const period = loading
-    ? "Loading..."
-    : monthlyData.length > 0
-      ? `${monthlyData[0].month} - ${monthlyData[monthlyData.length - 1].month}`
-      : "No data";
+  // ── Apply filters callback (passed to context) ──
+  function applyFilters(patch: {
+    startDate?: string;
+    endDate?: string;
+    threshold?: number;
+    granularity?: Granularity;
+  }) {
+    if (patch.startDate !== undefined) setAppliedStartDate(patch.startDate);
+    if (patch.endDate !== undefined) setAppliedEndDate(patch.endDate);
+    if (patch.threshold !== undefined) setAppliedThreshold(patch.threshold);
+    if (patch.granularity !== undefined) setAppliedGranularity(patch.granularity);
+  }
+
+  const filtersValue = {
+    startDate: appliedStartDate,
+    endDate: appliedEndDate,
+    threshold: appliedThreshold,
+    granularity: appliedGranularity,
+    applyFilters,
+  };
+
+  // ── Period label for header ──
+  const period = computePeriodLabel(appliedStartDate, appliedEndDate);
 
   return (
-    <main className="dark min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8">
-          <DashboardHeader period={period} />
-
-          {error ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
-              {error}
+    <FacetsProvider value={facetsResult}>
+      <FiltersProvider value={filtersValue}>
+        <main className="dark min-h-screen bg-background text-foreground">
+          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-8">
+              <DashboardHeader period={period} />
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/comparison" element={<ComparisonPage />} />
+              </Routes>
             </div>
-          ) : null}
-
-          <section aria-label="Key performance indicators">
-            <KPIRow metrics={metrics} loading={loading} />
-          </section>
-
-          <section
-            aria-label="Financial charts"
-            className="grid grid-cols-1 gap-4 xl:grid-cols-2"
-          >
-            <IncomeOutcomeChart data={monthlyData} loading={loading} />
-            <ProfitPercentChart data={monthlyData} loading={loading} />
-          </section>
-        </div>
-      </div>
-    </main>
+          </div>
+        </main>
+      </FiltersProvider>
+    </FacetsProvider>
   );
 }
 
