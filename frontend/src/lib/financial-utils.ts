@@ -5,6 +5,8 @@ import {
   type SummaryItem,
   type ComputedAlert,
   type Granularity,
+  type Category,
+  type CategoryEntry,
 } from "./financial-types";
 
 // ─── Date parsing (no `new Date("YYYY-MM-DD")` — avoids timezone shift, P6-a) ───
@@ -264,4 +266,44 @@ export function computeAlerts(
 
   // Sort by period descending (P9-b)
   return alerts.sort((a, b) => b.period.localeCompare(a.period));
+}
+
+// ─── Category helpers (G1) ───
+
+const CATEGORY_LABELS: Record<Category, string> = {
+  sales: "Sales",
+  administrative: "Administrative",
+  operational: "Operational",
+  suppliers: "Suppliers",
+  others: "Others",
+};
+
+export function capitalizeCategory(cat: Category): string {
+  return CATEGORY_LABELS[cat] ?? cat;
+}
+
+// ─── Comparison helpers (F3) ───
+
+export interface CategoryGroupResult {
+  data: CategoryEntry[];
+  total: number;
+}
+
+export function summarizeCategoryGroup(
+  entries: CategoryEntry[],
+  allowedCategories?: Category[],
+): CategoryGroupResult {
+  // Filter by allowed categories if facets data is available (R2-a, U1-A)
+  let filtered = entries;
+  if (allowedCategories && allowedCategories.length > 0) {
+    filtered = entries.filter((e) => allowedCategories.includes(e.category));
+  }
+
+  // Total = sum of all filtered entries (R3-a)
+  const total = filtered.reduce((sum, e) => sum + e.total_amount, 0);
+
+  // Top 5 for display (API already returns descending order)
+  const data = filtered.slice(0, 5);
+
+  return { data, total };
 }

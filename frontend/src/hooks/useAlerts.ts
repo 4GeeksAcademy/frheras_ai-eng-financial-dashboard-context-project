@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { type SummaryItem, type ComputedAlert, type Granularity } from "@/lib/financial-types"
 import { computeAlerts } from "@/lib/financial-utils"
 
@@ -20,8 +20,8 @@ export function useAlerts(
   const [alerts, setAlerts] = useState<ComputedAlert[]>([])
   const [isAlertsLoading, setIsAlertsLoading] = useState(true)
   const [alertsError, setAlertsError] = useState<string | null>(null)
-  let abortController: AbortController | null = null
-  let previousKey = ""
+  const abortRef = useRef<AbortController | null>(null)
+  const previousKeyRef = useRef("")
 
   function computeKey(): string {
     return `${startDate}|${endDate}|${granularity}|${threshold}`
@@ -30,12 +30,12 @@ export function useAlerts(
   function fetchSummaryAndCompute() {
     const currentKey = computeKey()
     // Skip duplicate calls
-    if (currentKey === previousKey) return
-    previousKey = currentKey
+    if (currentKey === previousKeyRef.current) return
+    previousKeyRef.current = currentKey
 
-    abortController?.abort()
+    abortRef.current?.abort()
     const controller = new AbortController()
-    abortController = controller
+    abortRef.current = controller
 
     setIsAlertsLoading(true)
     setAlertsError(null)
@@ -75,7 +75,7 @@ export function useAlerts(
   useEffect(() => {
     fetchSummaryAndCompute()
     return () => {
-      abortController?.abort()
+      abortRef.current?.abort()
     }
   }, [startDate, endDate, granularity, threshold])
 

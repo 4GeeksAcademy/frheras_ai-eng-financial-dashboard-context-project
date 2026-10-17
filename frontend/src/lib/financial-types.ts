@@ -35,6 +35,12 @@ export interface FacetsResponse {
   max_date: string
 }
 
+export interface CategoryEntry {
+  category: Category
+  operation_type: OperationType
+  total_amount: number
+}
+
 export interface SummaryItem {
   period: string
   income: number

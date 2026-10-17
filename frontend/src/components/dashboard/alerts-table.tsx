@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { type ComputedAlert, type Granularity } from '@/lib/financial-types'
 import { formatCurrency, formatPeriod } from '@/lib/financial-utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

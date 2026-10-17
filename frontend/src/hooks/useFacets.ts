@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { type FacetsResponse } from "@/lib/financial-types"
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ""
@@ -14,12 +14,12 @@ export function useFacets(): UseFacetsResult {
   const [data, setData] = useState<FacetsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  let abortController: AbortController | null = null
+  const abortRef = useRef<AbortController | null>(null)
 
   function fetchFacets() {
-    abortController?.abort()
+    abortRef.current?.abort()
     const controller = new AbortController()
-    abortController = controller
+    abortRef.current = controller
 
     setIsLoading(true)
     setError(null)
@@ -47,7 +47,7 @@ export function useFacets(): UseFacetsResult {
   useEffect(() => {
     fetchFacets()
     return () => {
-      abortController?.abort()
+      abortRef.current?.abort()
     }
   }, [])
 

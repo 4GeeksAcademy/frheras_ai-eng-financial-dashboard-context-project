@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { type FinancialMovement } from "@/lib/financial-types"
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ""
@@ -14,17 +14,17 @@ export function useMetrics(startDate: string, endDate: string): UseMetricsResult
   const [movements, setMovements] = useState<FinancialMovement[]>([])
   const [isDataLoading, setIsDataLoading] = useState(true)
   const [dataError, setDataError] = useState<string | null>(null)
-  let abortController: AbortController | null = null
+  const abortRef = useRef<AbortController | null>(null)
 
   function fetchMetrics() {
-    abortController?.abort()
+    abortRef.current?.abort()
     const controller = new AbortController()
-    abortController = controller
+    abortRef.current = controller
 
     setIsDataLoading(true)
     setDataError(null)
 
-    // Build URL with optional query params (D-2: omit when empty/rang-full)
+    // Build URL with optional query params (D-2: omit when empty/range-full)
     const params = new URLSearchParams()
     if (startDate && startDate !== "") params.set("start_date", startDate)
     if (endDate && endDate !== "") params.set("end_date", endDate)
@@ -52,7 +52,7 @@ export function useMetrics(startDate: string, endDate: string): UseMetricsResult
   useEffect(() => {
     fetchMetrics()
     return () => {
-      abortController?.abort()
+      abortRef.current?.abort()
     }
   }, [startDate, endDate])
 
