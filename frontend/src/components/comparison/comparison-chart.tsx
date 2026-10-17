@@ -97,7 +97,7 @@ export function ComparisonChart({ b2bTotal, b2cTotal, isLoading, failedGroups }:
             <p className="text-sm text-muted-foreground">No data for the selected period</p>
           </div>
         ) : (
-          <div className="h-[280px] w-full">
+          <div className="h-[280px] w-full" role="img" aria-label="Bar chart comparing B2B and B2C total revenue">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}

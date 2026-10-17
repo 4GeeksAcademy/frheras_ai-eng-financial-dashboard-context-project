@@ -17,9 +17,9 @@ export function CategoryRankingTable({ categories, groupTotal }: CategoryRanking
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border/40 bg-muted/30">
-            <th className="px-3 py-2 text-left font-medium text-muted-foreground">Category</th>
-            <th className="px-3 py-2 text-right font-medium text-muted-foreground">Total income</th>
-            <th className="px-3 py-2 text-right font-medium text-muted-foreground">% of group</th>
+            <th scope="col" className="px-3 py-2 text-left font-medium text-muted-foreground">Category</th>
+            <th scope="col" className="px-3 py-2 text-right font-medium text-muted-foreground">Total income</th>
+            <th scope="col" className="px-3 py-2 text-right font-medium text-muted-foreground">% of group</th>
           </tr>
         </thead>
         <tbody>

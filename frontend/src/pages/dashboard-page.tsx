@@ -103,7 +103,7 @@ export function DashboardPage() {
     <>
       {/* Startup connectivity banner (Q16-B): only when facets never loaded */}
       {facetsCtx.error && !facetsCtx.data ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+        <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
           Failed to load financial data. Check the backend API.
         </div>
       ) : null}
@@ -134,20 +134,21 @@ export function DashboardPage() {
 
       {/* Data error banner (D-1): first-load fetch failure */}
       {showDataError ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+        <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
           {dataError}
         </div>
       ) : null}
 
       {/* Q20-A: transient error toast */}
       {showErrorToast && dataError ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+        <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
           {dataError}
         </div>
       ) : null}
 
       {/* KPIs */}
       <section aria-label="Key performance indicators">
+        <h2 className="sr-only">Key performance indicators</h2>
         <KPIRow metrics={kpiMetrics} loading={isDataLoading} />
       </section>
 
@@ -156,6 +157,7 @@ export function DashboardPage() {
         aria-label="Financial charts"
         className="grid grid-cols-1 gap-4 xl:grid-cols-2"
       >
+        <h2 className="sr-only">Financial charts</h2>
         <IncomeOutcomeChart data={monthlyData} loading={isDataLoading} />
         <ProfitPercentChart data={monthlyData} loading={isDataLoading} />
       </section>

@@ -50,7 +50,7 @@ export function AlertsTable({
     return (
       <Card className="border-border/60">
         <CardHeader>
-          <CardTitle>Spending alerts</CardTitle>
+          <h2 className="leading-none font-semibold">Spending alerts</h2>
           <div data-slot="card-action">{renderControls()}</div>
         </CardHeader>
         <CardContent>
@@ -67,7 +67,7 @@ export function AlertsTable({
     return (
       <Card className="border-border/60">
         <CardHeader>
-          <CardTitle>Spending alerts</CardTitle>
+          <h2 className="leading-none font-semibold">Spending alerts</h2>
           <div data-slot="card-action">{renderControls()}</div>
         </CardHeader>
         <CardContent>
@@ -75,10 +75,10 @@ export function AlertsTable({
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border text-left text-muted-foreground">
-                  <th className="pb-2 font-medium">Period</th>
-                  <th className="pb-2 font-medium">Recorded outcome</th>
-                  <th className="pb-2 font-medium">3-period moving average</th>
-                  <th className="pb-2 font-medium">Increase</th>
+                  <th scope="col" className="pb-2 font-medium">Period</th>
+                  <th scope="col" className="pb-2 font-medium">Recorded outcome</th>
+                  <th scope="col" className="pb-2 font-medium">3-period moving average</th>
+                  <th scope="col" className="pb-2 font-medium">Increase</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,7 +103,7 @@ export function AlertsTable({
     return (
       <Card className="border-border/60">
         <CardHeader>
-          <CardTitle>Spending alerts</CardTitle>
+          <h2 className="leading-none font-semibold">Spending alerts</h2>
           <div data-slot="card-action">{renderControls()}</div>
         </CardHeader>
         <CardContent>
@@ -127,10 +127,10 @@ export function AlertsTable({
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="pb-2 font-medium">Period</th>
-                <th className="pb-2 font-medium">Recorded outcome</th>
-                <th className="pb-2 font-medium">3-period moving average</th>
-                <th className="pb-2 font-medium">Increase</th>
+                <th scope="col" className="pb-2 font-medium">Period</th>
+                <th scope="col" className="pb-2 font-medium">Recorded outcome</th>
+                <th scope="col" className="pb-2 font-medium">3-period moving average</th>
+                <th scope="col" className="pb-2 font-medium">Increase</th>
               </tr>
             </thead>
             <tbody>

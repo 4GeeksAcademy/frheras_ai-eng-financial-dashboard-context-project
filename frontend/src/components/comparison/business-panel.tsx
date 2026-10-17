@@ -15,7 +15,7 @@ export function BusinessPanel({ businessType, categories, groupTotal, isLoading,
   return (
     <Card className="border-border/60 flex-1 min-w-0">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg">{businessType}</CardTitle>
+        <h2 className="text-lg leading-none font-semibold">{businessType}</h2>
       </CardHeader>
       <CardContent>
         {isLoading ? (

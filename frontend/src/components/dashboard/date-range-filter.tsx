@@ -84,7 +84,9 @@ export function DateRangeFilter(props: DateRangeFilterProps) {
         <span className="inline-flex items-center gap-1.5 text-muted-foreground">
           <Calendar size={14} />
         </span>
+        <label htmlFor="filter-start-date" className="sr-only">Start date</label>
         <input
+          id="filter-start-date"
           type="date"
           value={startDate}
           min={availableMinDate ?? ''}
@@ -97,7 +99,9 @@ export function DateRangeFilter(props: DateRangeFilterProps) {
           placeholder="YYYY-MM-DD"
         />
         <span className="text-xs text-muted-foreground">—</span>
+        <label htmlFor="filter-end-date" className="sr-only">End date</label>
         <input
+          id="filter-end-date"
           type="date"
           value={endDate}
           min={availableMinDate ?? ''}

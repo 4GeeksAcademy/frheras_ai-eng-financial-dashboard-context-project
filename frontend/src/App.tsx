@@ -51,8 +51,11 @@ function App() {
   return (
     <FacetsProvider value={facetsResult}>
       <FiltersProvider value={filtersValue}>
-        <main className="dark min-h-screen bg-background text-foreground">
+        <main id="main-content" className="dark min-h-screen bg-background text-foreground">
           <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded-md focus:shadow-lg">
+              Skip to main content
+            </a>
             <div className="flex flex-col gap-8">
               <DashboardHeader period={period} />
               <Routes>

@@ -18,6 +18,7 @@ export function ThresholdInput({ value, onChange }: ThresholdInputProps) {
         step="0.01"
         min="0.01"
         max="1"
+        aria-describedby={!valid ? "threshold-error" : undefined}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
           'h-8 w-20 rounded-md border px-2.5 text-xs text-foreground',
@@ -28,7 +29,7 @@ export function ThresholdInput({ value, onChange }: ThresholdInputProps) {
         )}
       />
       {!valid && (
-        <span className="text-destructive-foreground">
+        <span id="threshold-error" className="text-destructive-foreground">
           Threshold is required
         </span>
       )}
