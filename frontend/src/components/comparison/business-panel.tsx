@@ -1,6 +1,6 @@
 import { type CategoryEntry } from "@/lib/financial-types"
 import { formatCurrency } from "@/lib/financial-utils"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { CategoryRankingTable, CategoryRankingTableSkeleton } from "./category-ranking-table"
 
 interface BusinessPanelProps {

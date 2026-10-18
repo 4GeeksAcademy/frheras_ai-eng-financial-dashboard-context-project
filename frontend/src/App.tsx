@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { FiltersProvider, FacetsProvider } from "@/context/filters-context";
@@ -25,17 +25,17 @@ function App() {
   const [appliedGranularity, setAppliedGranularity] = useState<Granularity>("month");
 
   // ── Apply filters callback (passed to context) ──
-  function applyFilters(patch: {
+  const applyFilters = useCallback((patch: {
     startDate?: string;
     endDate?: string;
     threshold?: number;
     granularity?: Granularity;
-  }) {
+  }) => {
     if (patch.startDate !== undefined) setAppliedStartDate(patch.startDate);
     if (patch.endDate !== undefined) setAppliedEndDate(patch.endDate);
     if (patch.threshold !== undefined) setAppliedThreshold(patch.threshold);
     if (patch.granularity !== undefined) setAppliedGranularity(patch.granularity);
-  }
+  }, []);
 
   const filtersValue = {
     startDate: appliedStartDate,

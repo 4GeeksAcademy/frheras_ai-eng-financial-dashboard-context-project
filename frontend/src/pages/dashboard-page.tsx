@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { DateRangeFilter } from "@/components/dashboard/date-range-filter";
 import { AlertsTable } from "@/components/dashboard/alerts-table";
 import { KPIRow } from "@/components/dashboard/kpi-row";
@@ -44,8 +44,14 @@ export function DashboardPage() {
     useMetrics(filtersCtx.startDate, filtersCtx.endDate);
 
   // Compute KPIs and monthly data from movements
-  const kpiMetrics = movements.length > 0 ? computeKPIs(movements) : null;
-  const monthlyData = movements.length > 0 ? computeMonthlyData(movements) : [];
+  const kpiMetrics = useMemo(
+    () => (movements.length > 0 ? computeKPIs(movements) : null),
+    [movements],
+  );
+  const monthlyData = useMemo(
+    () => (movements.length > 0 ? computeMonthlyData(movements) : []),
+    [movements],
+  );
 
   // ── Track first successful data load (D-1) ──
   useEffect(() => {
