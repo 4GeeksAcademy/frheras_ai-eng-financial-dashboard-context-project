@@ -1,11 +1,31 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { FiltersProvider, FacetsProvider } from "@/context/filters-context";
 import { useFacets } from "@/hooks/useFacets";
-import { DashboardPage } from "@/pages/dashboard-page";
-import { ComparisonPage } from "@/pages/comparison-page";
 import type { Granularity } from "@/lib/financial-types";
+
+// ── Route-level code splitting (performance: Large bundle size) ──
+// Las páginas se cargan bajo demanda con dynamic import() → chunk separado.
+const DashboardPage = lazy(() =>
+  import("@/pages/dashboard-page").then((m) => ({ default: m.DashboardPage })),
+);
+const ComparisonPage = lazy(() =>
+  import("@/pages/comparison-page").then((m) => ({ default: m.ComparisonPage })),
+);
+
+function PageFallback() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="animate-pulse space-y-4"
+    >
+      <div className="h-12 w-64 rounded-lg bg-muted" />
+      <div className="h-[280px] w-full rounded-lg bg-muted" />
+    </div>
+  );
+}
 
 function computePeriodLabel(startDate: string, endDate: string): string {
   if (startDate && endDate) return `${startDate} – ${endDate}`;
@@ -58,10 +78,12 @@ function App() {
             </a>
             <div className="flex flex-col gap-8">
               <DashboardHeader period={period} />
-              <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/comparison" element={<ComparisonPage />} />
-              </Routes>
+              <Suspense fallback={<PageFallback />}>
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/comparison" element={<ComparisonPage />} />
+                </Routes>
+              </Suspense>
             </div>
           </div>
         </main>

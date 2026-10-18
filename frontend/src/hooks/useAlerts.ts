@@ -16,7 +16,10 @@ export function useAlerts(
   granularity: Granularity,
   threshold: number,
 ): UseAlertsResult {
-  const key = `${startDate}|${endDate}|${granularity}|${threshold}`
+  // El servidor NO usa `threshold` (el cálculo de anomalías es 100% cliente).
+  // Excluirlo del key del fetch evita un refetch innecesario al cambiar el
+  // umbral: solo cambia el useMemo de computeAlerts. (perf: over-fetching / red redundante)
+  const fetchKey = `${startDate}|${endDate}|${granularity}`
 
   const { data: summary, isLoading, error, refetch } = useApiFetch<SummaryItem[]>(
     () => {
@@ -27,7 +30,7 @@ export function useAlerts(
       if (endDate && endDate !== "") params.set("end_date", endDate)
       return `/api/metrics/summary?${params.toString()}`
     },
-    [key],
+    [fetchKey],
   )
 
   const alerts = useMemo(

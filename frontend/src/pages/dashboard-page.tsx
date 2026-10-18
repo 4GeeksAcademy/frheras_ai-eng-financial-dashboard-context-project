@@ -1,9 +1,7 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { DateRangeFilter } from "@/components/dashboard/date-range-filter";
 import { AlertsTable } from "@/components/dashboard/alerts-table";
 import { KPIRow } from "@/components/dashboard/kpi-row";
-import { IncomeOutcomeChart } from "@/components/dashboard/income-outcome-chart";
-import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart";
 import { type Granularity } from "@/lib/financial-types";
 import {
   computeKPIs,
@@ -14,6 +12,25 @@ import {
 import { useFacetsContext, useFilters } from "@/context/filters-context";
 import { useMetrics } from "@/hooks/useMetrics";
 import { useAlerts } from "@/hooks/useAlerts";
+
+// ── Chunk split: charts (recharts) se cargan bajo demanda tras el primer
+// pintado de KPIs para no bloquear el LCP con el bundle de recharts. (perf: Large bundle size)
+const IncomeOutcomeChart = lazy(() =>
+  import("@/components/dashboard/income-outcome-chart").then((m) => ({
+    default: m.IncomeOutcomeChart,
+  })),
+);
+const ProfitPercentChart = lazy(() =>
+  import("@/components/dashboard/profit-percent-chart").then((m) => ({
+    default: m.ProfitPercentChart,
+  })),
+);
+
+function ChartFallback() {
+  return (
+    <div className="h-[280px] w-full animate-pulse rounded-lg bg-muted" />
+  );
+}
 
 export function DashboardPage() {
   // ── Shared contexts ──
@@ -164,8 +181,12 @@ export function DashboardPage() {
         className="grid grid-cols-1 gap-4 xl:grid-cols-2"
       >
         <h2 className="sr-only">Financial charts</h2>
-        <IncomeOutcomeChart data={monthlyData} loading={isDataLoading} />
-        <ProfitPercentChart data={monthlyData} loading={isDataLoading} />
+        <Suspense fallback={<ChartFallback />}>
+          <IncomeOutcomeChart data={monthlyData} loading={isDataLoading} />
+        </Suspense>
+        <Suspense fallback={<ChartFallback />}>
+          <ProfitPercentChart data={monthlyData} loading={isDataLoading} />
+        </Suspense>
       </section>
 
       {/* Alerts table (R1-B): below chart grid */}
