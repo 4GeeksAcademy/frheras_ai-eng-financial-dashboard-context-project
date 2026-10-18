@@ -8,6 +8,15 @@ description: Use it when you create, modify, or review dashboard components that
 ## Goal
 Define a single standard for displaying money amounts, percentages, and dates in the dashboard, eliminating current inconsistencies (amounts with and without decimals, percentages with different precision, dates in ISO format). It is the single source of truth for formatting these values.
 
+## Product locale and currency
+- Use `en-US` locale and USD currency for dashboard monetary values unless the user explicitly changes the product requirements.
+- The locale and currency are product defaults, not inferred from the viewer's browser. A product-level change must update this skill, the central formatters, and their tests together.
+
+## Edge-case conventions
+- Round displayed money and percentages to two fractional digits using the standard `Intl.NumberFormat` / JavaScript number formatting behavior; do not perform a separate business calculation solely for display.
+- Preserve a negative sign for negative amounts and percentages. Render zero using the same two-decimal format as other values.
+- Format dates from the calendar date supplied by the API as `DD/MM/YYYY`; do not shift date-only values through UTC parsing. For a `Date` value, use its local calendar date unless the feature explicitly defines a different timezone.
+
 ## Inputs
 - Formatting utilities: `frontend/src/lib/financial-utils.ts` (`formatCurrency`, `formatPercent`, `formatPeriod`, `formatMonthYearLabel`).
 - Dashboard components in `frontend/src/components/dashboard/`: KPIs, alerts table, income/expense and margin charts, date filter, and header.

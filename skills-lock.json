@@ -18,6 +18,12 @@
       "sourceType": "github",
       "skillPath": "skills/react-best-practices/SKILL.md",
       "computedHash": "3219a1944e404ffc14d1d9d6aef6dd2e3855b81387ee0a044ccbfe14d34c2357"
+    },
+    "financial-format": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/financial-format/SKILL.md",
+      "computedHash": "d190e95646cb5968f2fdf235d97e3e3d9c070f88b96a475e47c5f742c057a54c"
     }
   }
 }
