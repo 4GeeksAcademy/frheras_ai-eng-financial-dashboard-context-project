@@ -27,11 +27,8 @@ function toYearMonthKey(value: Date): string {
 function formatMonthYearLabel(yearMonthKey: string): string {
   const [yearText, monthText] = yearMonthKey.split("-");
   const year = Number(yearText);
-  const month = Number(monthText) - 1;
-  return new Date(year, month, 1).toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
+  const month = Number(monthText);
+  return `01/${String(month).padStart(2, "0")}/${year}`;
 }
 
 // ─── KPIs & monthly data (existing, unchanged) ───
@@ -86,7 +83,7 @@ export function computeMonthlyData(
 
 // ─── Formatters ───
 
-export function formatCurrency(value: number, decimals: number = 0): string {
+export function formatCurrency(value: number, decimals: number = 2): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -96,7 +93,7 @@ export function formatCurrency(value: number, decimals: number = 0): string {
 }
 
 export function formatPercent(value: number): string {
-  return `${value.toFixed(1)}%`;
+  return `${value.toFixed(2)}%`;
 }
 
 // ─── Threshold utilities (P11-a, U2-A) ───
@@ -158,23 +155,45 @@ export function isPeriodStart(dateStr: string, granularity: Granularity): boolea
 export function formatPeriod(period: string, granularity: Granularity): string {
   switch (granularity) {
     case "day": {
-      // YYYY-MM-DD → "Dec 15, 2025"
-      const { year, month, day } = parseDate(period);
-      const d = new Date(year, month - 1, day);
-      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      // YYYY-MM-DD → "15/12/2025"
+      return formatDateToDMY(period);
     }
     case "week": {
-      // YYYY-Www → "Week 05, 2026"
+      // YYYY-Www → Monday of that ISO week, "26/01/2026"
       const [y, w] = period.split("-W");
-      return `Week ${w}, ${y}`;
+      const isoYear = Number(y);
+      const week = Number(w);
+      // ISO week 1 = the week containing the first Thursday (Jan 4 is always in week 1)
+      const jan4 = new Date(isoYear, 0, 4);
+      const mondayOfWeek1 = new Date(jan4);
+      mondayOfWeek1.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7));
+      const monday = new Date(mondayOfWeek1);
+      monday.setDate(monday.getDate() + (week - 1) * 7);
+      return formatDateToDMY(monday);
     }
     case "month": {
-      // YYYY-MM → "Dec 2025"
-      const { year, month } = parseDate(period + "-01");
-      const d = new Date(year, month - 1, 1);
-      return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+      // YYYY-MM → "01/12/2025"
+      return formatDateToDMY(`${period}-01`);
     }
   }
+}
+
+/**
+ * Formato de fecha visible del dashboard: DD/MM/AAAA (skill formato-financiero).
+ * Acepta también un objeto Date.
+ */
+export function formatDateToDMY(date: string | Date): string {
+  const { year, month, day } =
+    typeof date === "string" ? parseDate(date) : dateToParts(date);
+  return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+}
+
+function dateToParts(date: Date): { year: number; month: number; day: number } {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
 }
 
 // ─── Alerts computation (Q1-a, Q9-B, Q10-B, Q3-b) ───

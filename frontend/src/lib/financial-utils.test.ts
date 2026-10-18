@@ -5,6 +5,7 @@ import {
   computeMonthlyData,
   formatCurrency,
   formatPercent,
+  formatDateToDMY,
 } from "./financial-utils";
 import type { FinancialMovement } from "./financial-types";
 
@@ -89,13 +90,13 @@ describe("computeMonthlyData", () => {
 
     expect(monthlyData).toHaveLength(2);
     expect(monthlyData[0]).toEqual({
-      month: "Dec 2025",
+      month: "01/12/2025",
       income: 1000,
       outcome: 200,
       profitPercent: 80,
     });
     expect(monthlyData[1]).toEqual({
-      month: "Jan 2026",
+      month: "01/01/2026",
       income: 300,
       outcome: 0,
       profitPercent: 100,
@@ -104,11 +105,18 @@ describe("computeMonthlyData", () => {
 });
 
 describe("formatters", () => {
-  it("formats currency without decimals", () => {
-    expect(formatCurrency(1234.56)).toBe("$1,235");
+  it("formats currency with two decimals by default", () => {
+    expect(formatCurrency(1234.56)).toBe("$1,234.56");
+    expect(formatCurrency(1234)).toBe("$1,234.00");
   });
 
-  it("formats percent with one decimal", () => {
-    expect(formatPercent(15.555)).toBe("15.6%");
+  it("formats percent with two decimals", () => {
+    expect(formatPercent(15.555)).toBe("15.55%");
+    expect(formatPercent(12.3)).toBe("12.30%");
+  });
+
+  it("formats ISO dates as DD/MM/YYYY", () => {
+    expect(formatDateToDMY("2025-12-15")).toBe("15/12/2025");
+    expect(formatDateToDMY("2024-01-05")).toBe("05/01/2024");
   });
 });

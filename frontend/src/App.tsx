@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { FiltersProvider, FacetsProvider } from "@/context/filters-context";
 import { useFacets } from "@/hooks/useFacets";
+import { formatDateToDMY } from "@/lib/financial-utils";
 import type { Granularity } from "@/lib/financial-types";
 
 // ── Route-level code splitting (performance: Large bundle size) ──
@@ -28,9 +29,9 @@ function PageFallback() {
 }
 
 function computePeriodLabel(startDate: string, endDate: string): string {
-  if (startDate && endDate) return `${startDate} – ${endDate}`;
-  if (startDate && !endDate) return `From ${startDate}`;
-  if (!startDate && endDate) return `Until ${endDate}`;
+  if (startDate && endDate) return `${formatDateToDMY(startDate)} – ${formatDateToDMY(endDate)}`;
+  if (startDate && !endDate) return `From ${formatDateToDMY(startDate)}`;
+  if (!startDate && endDate) return `Until ${formatDateToDMY(endDate)}`;
   return "All time";
 }
 

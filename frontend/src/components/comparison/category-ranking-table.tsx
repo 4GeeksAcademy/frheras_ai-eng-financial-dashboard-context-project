@@ -26,8 +26,8 @@ export function CategoryRankingTable({ categories, groupTotal }: CategoryRanking
           {categories.map((entry) => {
             const pct =
               groupTotal > 0
-                ? ((entry.total_amount / groupTotal) * 100).toFixed(1)
-                : "0.0"
+                ? ((entry.total_amount / groupTotal) * 100).toFixed(2)
+                : "0.00"
             return (
               <tr
                 key={entry.category}

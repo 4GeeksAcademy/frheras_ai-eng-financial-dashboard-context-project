@@ -8,6 +8,7 @@ import {
   computeMonthlyData,
   clampThreshold,
   isValidThreshold,
+  formatDateToDMY,
 } from "@/lib/financial-utils";
 import { useFacetsContext, useFilters } from "@/context/filters-context";
 import { useMetrics } from "@/hooks/useMetrics";
@@ -151,7 +152,7 @@ export function DashboardPage() {
       {/* M-5: out of range note */}
       {showOutOfRangeNote && facetsCtx.data ? (
         <p className="text-xs text-muted-foreground">
-          No financial data in the selected range. Available: {facetsCtx.data.min_date} – {facetsCtx.data.max_date}
+          No financial data in the selected range. Available: {formatDateToDMY(facetsCtx.data.min_date)} – {formatDateToDMY(facetsCtx.data.max_date)}
         </p>
       ) : null}
 

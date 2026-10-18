@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { formatDateToDMY } from '@/lib/financial-utils'
 import { Calendar } from 'lucide-react'
 
 interface DateRangeFilterProps {
@@ -66,7 +67,7 @@ export function DateRangeFilter(props: DateRangeFilterProps) {
     if (availableMinDate && availableMaxDate) {
       return (
         <span className="text-xs text-muted-foreground">
-          Available range: {availableMinDate} – {availableMaxDate}
+          Available range: {formatDateToDMY(availableMinDate)} – {formatDateToDMY(availableMaxDate)}
         </span>
       )
     }
@@ -96,7 +97,7 @@ export function DateRangeFilter(props: DateRangeFilterProps) {
             'h-8 rounded-md border border-input bg-background px-2.5 text-xs text-foreground',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           )}
-          placeholder="YYYY-MM-DD"
+placeholder="DD/MM/AAAA"
         />
         <span className="text-xs text-muted-foreground">—</span>
         <label htmlFor="filter-end-date" className="sr-only">End date</label>
@@ -111,7 +112,7 @@ export function DateRangeFilter(props: DateRangeFilterProps) {
             'h-8 rounded-md border border-input bg-background px-2.5 text-xs text-foreground',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           )}
-          placeholder="YYYY-MM-DD"
+          placeholder="DD/MM/AAAA"
         />
         <button
           type="button"

@@ -89,8 +89,8 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
                 tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
                 axisLine={false}
                 tickLine={false}
-                tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-                width={48}
+                tickFormatter={(v) => formatCurrency(v)}
+                width={72}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
