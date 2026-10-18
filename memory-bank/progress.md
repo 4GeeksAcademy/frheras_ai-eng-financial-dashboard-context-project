@@ -5,7 +5,7 @@
 ## 1. Estado general
 
 - ✅ **Todo el stack verificado**: backend, frontend, tests, build, lint y endpoints HTTP reales.
-- 🔖 **HEAD**: `38f5426 feat(phase-3): implement and validate actionable agent rules in .agents/rules` (árbol de trabajo limpio salvo `memory-bank/` nuevo sin versionar).
+- 🔖 **HEAD**: `630caa4 refactor(a11y): apply accessibility audit findings` (accessibility skill `ui-ux-pro-max` aplicada y validada)
 - 📁 Estructura de contexto para agentes ya presente: `verification.md` (raíz), `findings.md` (raíz), `.agents/rules/` (3 reglas), `memory-bank/` (este directorio, recién creado).
 
 ## 2. Qué funciona (verificado con evidencia)
@@ -75,3 +75,9 @@
 - Los commits de fases 1–3 están en `main`: `ca87707` (fase-1: auditoría + `verification.md`), `585b8f7` (fase-2: `findings.md` + reglas propuestas), `38f5426` (fase-3: reglas implementadas y validadas en `.agents/rules/`).
 - `memory-bank/` es nuevo (no versionado todavía); `AGENTS.md` ya lo referencia como contexto obligatorio para agentes.
 - Al ejecutar Vite fuera de Docker, definir `VITE_API_BASE_URL` apuntando a la API (p. ej. `http://localhost:8000`) para no depender del hostname Docker del proxy.
+
+## 6. Registro de skills
+
+| Skill | Fuente | Hallazgos aceptados | Hallazgos rechazados (y por qué) | Evidencia |
+|---|---|---|---|---|
+| `ui-ux-pro-max` (accessibility) | `nextlevelbuilder/ui-ux-pro-max-skill@github` | 10 — `form-labels` (#1), `heading-hierarchy` (#2, #3), `voiceover-sr` (#4, #7), `aria-labels` (#5), `skip-links` (#8), `color-not-only` (#7), `reduced-motion` (#10), `keyboard-nav` (#8) | 13 — `alt-text` (sin `<img>`), `icon-context` (Lucide ya oculta iconos decorativos), `dragging-alternative` (sin drag & drop), `accessible-authentication` (sin login), `auto-rotation-controls` (sin carruseles), `contextual-live-badge-updates` (sin badges en vivo), `keyboard-shortcuts` (sin atajos personalizados), `escape-routes` (sin modales), `consistent-help` (sin ayuda repetida), `redundant-entry` (sin procesos multi-paso), `dynamic-type` (específico iOS), `focus-not-obscured`/`focus-not-obscured-enhanced` (sin UI sticky) | `get_errors` → 0 errores TS; **12 archivos modificados** (commit `630caa4`): `index.html`, `index.css`, `App.tsx`, `dashboard-page.tsx`, `date-range-filter.tsx`, `alerts-table.tsx`, `category-ranking-table.tsx`, `income-outcome-chart.tsx`, `profit-percent-chart.tsx`, `comparison-chart.tsx`, `business-panel.tsx`, `threshold-input.tsx` |
