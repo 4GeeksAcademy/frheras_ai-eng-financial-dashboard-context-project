@@ -4,7 +4,7 @@ Agents working on this project **must**:
 
 - Look for **work instructions and rules** in `./.agents/rules`.
 
-- Look for available **agent skills** in `./.agents/skills`.
+- Look for available **agent skills** in `./.agents/skills` (skills externas) y en `./.skills` (skill interna).
 
 - Look for the **project memory bank** in `./memory-bank` if the directory exists.
 
@@ -17,6 +17,6 @@ Before taking action (analyzing code, modifying files, or generating outputs), a
 
 ## Skill lifecycle
 
-- Before installing a skill, review this registry and the existing `SKILL.md` files for scope overlap. Use `.agents/skills/<skill-name>/SKILL.md` as the canonical location for agent skills.
+- Before installing a skill, review this registry and the existing `SKILL.md` files for scope overlap. Use `.agents/skills/<skill-name>/SKILL.md` as the canonical location for agent skills; use `.skills/<skill-name>/SKILL.md` for the internal skill (as required by the assignment).
 - For a skill sourced from GitHub, record and verify its source, repository-relative skill path, and computed content hash in `skills-lock.json`.
 - When updating or removing a skill, update `skills-lock.json` and the skill registry in `memory-bank/progress.md` in the same change. Preserve provenance and note the reason for removal or replacement.

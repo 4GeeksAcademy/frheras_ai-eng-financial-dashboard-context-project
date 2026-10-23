@@ -17,7 +17,7 @@ La UI separa la composición de página (`frontend/src/App.tsx`), los cálculos 
 - Sincroniza `FinancialMovement`, `OperationType`, `Category` y `BusinessType` de `src/lib/financial-types.ts` con los modelos y valores de la API en `backend/app/routes.py`. Añade o actualiza pruebas de contrato al cambiar el payload.
 - Deriva las etiquetas temporales de los datos o filtros activos. No repitas el literal `period="2024 - Full Year"` de `App.tsx` cuando los datos del backend se generan relativos a `date.today()`.
 - Mantén estados visibles de carga, error y ausencia de datos. `App.tsx` ya administra `loading` y `error`; ante nuevos errores, conserva información técnica para diagnóstico y muestra un mensaje seguro. Para solicitudes cancelables, usa `AbortController`.
-- Centraliza formato de moneda, porcentaje y fecha siguiendo `.agents/skills/financial-format/SKILL.md`: el estándar vigente es locale `en-US`, moneda USD, importes y porcentajes con dos decimales, y fechas `DD/MM/YYYY`. Si el usuario cambia el mercado objetivo, actualiza skill, formatters y pruebas en el mismo cambio.
+- Centraliza formato de moneda, porcentaje y fecha siguiendo `.skills/financial-format/SKILL.md`: el estándar vigente es locale `en-US`, moneda USD, importes y porcentajes con dos decimales, y fechas `DD/MM/YYYY`. Si el usuario cambia el mercado objetivo, actualiza skill, formatters y pruebas en el mismo cambio.
 - Añade pruebas unitarias de lógica en `src/lib/*.test.ts`. Si cambia el flujo de `App.tsx`, cubre también carga correcta, error de red/HTTP y datos vacíos con pruebas de integración.
 - Ejecuta desde `frontend/`: `npm test`, `npm run lint` y `npm run build`.
 
