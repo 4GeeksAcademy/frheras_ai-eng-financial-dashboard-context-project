@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { type MonthlyDataPoint } from '@/lib/financial-types'
 import { formatCurrency } from '@/lib/financial-utils'
@@ -66,7 +66,7 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
   return (
     <Card className="border-border/60">
       <CardHeader className="pb-4">
-        <CardTitle className="text-base font-semibold">Income vs. Outcome</CardTitle>
+        <h3 className="text-base font-semibold leading-none">Income vs. Outcome</h3>
         <CardDescription>Monthly revenue and expenditure evolution</CardDescription>
       </CardHeader>
       <CardContent>
@@ -75,6 +75,7 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
             No data available to display
           </div>
         ) : (
+          <div role="img" aria-label="Line chart showing income and outcome over time" style={{ width: '100%', height: 280 }}>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" strokeOpacity={0.6} />
@@ -88,8 +89,8 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
                 tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
                 axisLine={false}
                 tickLine={false}
-                tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-                width={48}
+                tickFormatter={(v) => formatCurrency(v)}
+                width={72}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
@@ -117,6 +118,7 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
               />
             </LineChart>
           </ResponsiveContainer>
+          </div>
         )}
       </CardContent>
     </Card>
